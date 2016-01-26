@@ -158,8 +158,6 @@ module Kloudless
       naming_conflict: NamingConflictError,
       too_many_requests: TooManyRequestsError,
       too_many_service_requests: TooManyServiceRequestsError,
-      method_not_allowed: MethodNotAllowedError,
-      not_acceptable: NotAcceptableError,
       internal_error: InternalErrorError,
       link_error: LinkErrorError,
       unsupported_media_type: UnsupportedMediaTypeError,

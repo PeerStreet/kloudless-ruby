@@ -35,7 +35,7 @@ module Kloudless
 
       request = Net::HTTP::Post.new(uri)
       request.initialize_http_header(headers)
-      request.set_form_data(params) if !params.empty?
+      request.body = params.to_json if !params.empty?
 
       execute(request)
     end

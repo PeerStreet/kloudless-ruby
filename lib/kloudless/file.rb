@@ -3,6 +3,9 @@ module Kloudless
   class File < Model
     def self.upload(account_id:, **params)
       path = "/accounts/#{account_id}/files"
+      if overwrite = params.delete(:overwrite)
+        path << "?overwrite=#{overwrite}"
+      end
       new(http.post(path, params: params))
     end
 

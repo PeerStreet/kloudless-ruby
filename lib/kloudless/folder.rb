@@ -2,15 +2,15 @@ module Kloudless
   # https://developers.kloudless.com/docs#folders
   class Folder < Model
     # https://developers.kloudless.com/docs#folders-create-a-folder
-    def self.create(account_id:, **params)
+    def self.create(account_id:, params: {}, **data)
       path = "/accounts/#{account_id}/folders"
-      new(http.post(path, params: params))
+      new(http.post(path, params: params, data: data))
     end
 
     # https://developers.kloudless.com/docs#folders-retrieve-folder-metadata
-    def self.metadata(account_id:, folder_id:)
+    def self.metadata(account_id:, folder_id:, **params)
       path = "/accounts/#{account_id}/folders/#{folder_id}"
-      new(http.get(path))
+      new(http.get(path, params: params))
     end
 
     # https://developers.kloudless.com/docs#folders-retrieve-folder-contents
@@ -20,16 +20,16 @@ module Kloudless
     end
 
     # https://developers.kloudless.com/docs#folders-rename/move-a-folder
-    def self.rename(account_id:, folder_id:, **params)
+    def self.rename(account_id:, folder_id:, params: {}, **data)
       path = "/accounts/#{account_id}/folders/#{folder_id}"
-      new(http.patch(path, params: params))
+      new(http.patch(path, params: params, data: data))
     end
 
     # https://developers.kloudless.com/docs#folders-copy-a-folder
-    def self.copy(account_id:, folder_id:, parent_id:, **params)
-      params[:parent_id] = parent_id
+    def self.copy(account_id:, folder_id:, parent_id:, params: {}, **data)
       path = "/accounts/#{account_id}/folders/#{folder_id}/copy"
-      new(http.post(path, params: params))
+      data[:parent_id] = parent_id
+      new(http.post(path, params: params, data: data))
     end
 
     # https://developers.kloudless.com/docs#folders-delete-a-folder

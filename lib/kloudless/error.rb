@@ -153,8 +153,6 @@ module Kloudless
       forbidden: ForbiddenError,
       service_forbidden: ServiceForbiddenError,
       not_found: NotFoundError,
-      method_not_allowed: MethodNotAllowedError,
-      not_acceptable: NotAcceptableError,
       naming_conflict: NamingConflictError,
       too_many_requests: TooManyRequestsError,
       too_many_service_requests: TooManyServiceRequestsError,
@@ -165,6 +163,7 @@ module Kloudless
       bad_gateway: BadGatewayError,
       service_not_available: ServiceNotAvailableError,
       gateway_timeout: GatewayTimeoutError,
-      insufficient_storage: InsufficientStorageError    }
+      insufficient_storage: InsufficientStorageError
+    }
   end
 end

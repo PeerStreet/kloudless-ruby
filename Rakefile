@@ -8,3 +8,7 @@ Rake::TestTask.new do |t|
 end
 
 task :default => :test
+
+task :console do
+  exec "irb -r byebug -r kloudless -I ./lib"
+end

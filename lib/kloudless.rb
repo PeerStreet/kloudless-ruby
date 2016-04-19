@@ -3,7 +3,6 @@ require_relative "kloudless/error"
 require_relative "kloudless/http"
 require_relative "kloudless/model"
 require_relative "kloudless/account"
-require_relative "kloudless/account_key"
 require_relative "kloudless/team"
 require_relative "kloudless/file"
 require_relative "kloudless/multipart_upload"
@@ -18,20 +17,20 @@ module Kloudless
   API_VERSION = "v0".freeze
   API_URL = "https://api.kloudless.com/#{API_VERSION}".freeze
 
-  # Public: Authorize with API Key or Account Key. Returns nothing.
+  # Public: Authorize with API Key or Bearer Token. Returns nothing.
   #
   # Options:
   #  :api_key
-  #  :account_key
+  #  :token
   #
   # https://developers.kloudless.com/docs#authorization
   def self.authorize(options = {})
     Kloudless::HTTP.headers["Authorization"] = if options[:api_key]
       "ApiKey #{options[:api_key]}"
-    elsif options[:account_key]
-      "AccountKey #{options[:account_key]}"
+    elsif options[:token]
+      "Bearer #{options[:token]}"
     else
-      raise ArgumentError.new(":api_key or :account_key required")
+      raise ArgumentError.new(":api_key or :token required")
     end
   end
 

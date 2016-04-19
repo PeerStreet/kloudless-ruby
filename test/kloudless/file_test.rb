@@ -2,35 +2,51 @@ require_relative "../test_helper"
 
 class Kloudless::FileTest < Minitest::Test
   def test_upload_file
-    Kloudless.http.expect(:post, returns: {"id" => "foo"}, args: ["/accounts/1/files", params: {}]) do
-      file = Kloudless::File.upload(account_id: 1)
+    metadata = {parent_id: "parent", name: "foo.txt"}
+    Kloudless.http.expect(:post, returns: {"id" => "foo"}, args: [
+                            "/accounts/1/files", data: "FILE CONTENTS",
+                            headers: {'X-Kloudless-Metadata' => metadata.to_json,
+                                      "Content-Type" => 'application/octet-stream'},
+                            params: {}, parse_request: false]) do
+      file = Kloudless::File.upload(account_id: 1, data: "FILE CONTENTS",
+                                    parent_id: metadata[:parent_id],
+                                    file_name: metadata[:name])
       assert_kind_of Kloudless::File, file
     end
   end
 
   def test_retrieve_file_metadata
-    Kloudless.http.expect(:get, returns: {"id" => "foo"}, args:["/accounts/1/files/2"]) do
+    Kloudless.http.expect(:get, returns: {"id" => "foo"}, args:["/accounts/1/files/2", params: {}]) do
       metadata = Kloudless::File.metadata(account_id: 1, file_id: 2)
       assert_kind_of Kloudless::File, metadata  # TODO: not really a type
     end
   end
 
   def test_rename_file
-    Kloudless.http.expect(:patch, returns: {"id" => "foo"}, args:["/accounts/1/files/2", params: {name: "new-name.txt"}]) do
+    Kloudless.http.expect(:patch, returns: {"id" => "foo"}, args:["/accounts/1/files/2", params: {}, data: {name: "new-name.txt"}]) do
       file = Kloudless::File.rename(account_id: 1, file_id: 2, name: "new-name.txt")
       assert_kind_of Kloudless::File, file
     end
   end
 
+  def test_update
+    Kloudless.http.expect(:put, returns: {"id" => "foo"}, args: [
+                            "/accounts/1/files/2", data: "FILE CONTENTS", parse_request: false,
+                            headers: {'Content-Type' => 'application/octet-stream'}]) do
+      file = Kloudless::File.update(account_id: 1, file_id: 2, data: "FILE CONTENTS")
+      assert_kind_of Kloudless::File, file
+    end
+  end
+  
   def test_download
-    Kloudless.http.expect(:get_raw, returns: "FILE CONTENTS", args:["/accounts/1/files/2/contents"]) do
+    Kloudless.http.expect(:get, returns: "FILE CONTENTS", args:["/accounts/1/files/2/contents", params: {}, parse_response: false]) do
       contents = Kloudless::File.download(account_id: 1, file_id: 2)
       assert_equal "FILE CONTENTS", contents
     end
   end
 
   def test_copy
-    Kloudless.http.expect(:post, returns: {"id" => "foo"}, args:["/accounts/1/files/2/copy", params: {parent_id: "parent-id"}]) do
+    Kloudless.http.expect(:post, returns: {"id" => "foo"}, args:["/accounts/1/files/2/copy", params: {}, data: {parent_id: "parent-id"}]) do
       file = Kloudless::File.copy(account_id: 1, file_id: 2, parent_id: "parent-id")
       assert_kind_of Kloudless::File, file
     end

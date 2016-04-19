@@ -50,8 +50,8 @@ class Kloudless::AccountTest < Minitest::Test
       token: "foo",
       token_secret: "bar"
     }
-    Kloudless.http.expect(:post, args: ["/accounts", {params: attributes}]) do
-      Kloudless::Account.import(attributes)
+    Kloudless.http.expect(:post, args: ["/accounts", {params: {}, data: attributes}]) do
+      Kloudless::Account.import(**attributes)
     end
   end
 
@@ -63,7 +63,7 @@ class Kloudless::AccountTest < Minitest::Test
   end
 
   def test_update_account
-    Kloudless.http.expect(:patch, args: ["/accounts/1", {params: {active: true}}]) do
+    Kloudless.http.expect(:patch, args: ["/accounts/1", {params: {}, data: {active: true}}]) do
       account = Kloudless::Account.update(account_id: 1, active: true)
       assert_kind_of Kloudless::Account, account
     end

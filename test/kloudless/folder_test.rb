@@ -2,14 +2,14 @@ require_relative "../test_helper"
 
 class Kloudless::FolderTest < Minitest::Test
   def test_create
-    Kloudless.http.expect(:post, args: ["/accounts/1/folders", params: {}]) do
-      folder = Kloudless::Folder.create(account_id: 1)
+    Kloudless.http.expect(:post, args: ["/accounts/1/folders", params: {}, data: {name: "foo"}]) do
+      folder = Kloudless::Folder.create(account_id: 1, name: "foo")
       assert_kind_of Kloudless::Folder, folder
     end
   end
 
   def test_metadata
-    Kloudless.http.expect(:get, args: ["/accounts/1/folders/2"]) do
+    Kloudless.http.expect(:get, args: ["/accounts/1/folders/2", params: {}]) do
       folder = Kloudless::Folder.metadata(account_id: 1, folder_id: 2)
       assert_kind_of Kloudless::Folder, folder
     end
@@ -25,14 +25,14 @@ class Kloudless::FolderTest < Minitest::Test
   end
 
   def test_rename
-    Kloudless.http.expect(:patch, args: ["/accounts/1/folders/2", params: {name: "foo.md"}]) do
+    Kloudless.http.expect(:patch, args: ["/accounts/1/folders/2", params: {}, data: {name: "foo.md"}]) do
       folder = Kloudless::Folder.rename(account_id: 1, folder_id: 2, name: "foo.md")
       assert_kind_of Kloudless::Folder, folder
     end
   end
 
   def test_copy
-    Kloudless.http.expect(:post, args: ["/accounts/1/folders/2/copy", params: {parent_id: "parent-id"}]) do
+    Kloudless.http.expect(:post, args: ["/accounts/1/folders/2/copy", params: {}, data: {parent_id: "parent-id"}]) do
       folder = Kloudless::Folder.copy(account_id: 1, folder_id: 2, parent_id: "parent-id")
       assert_kind_of Kloudless::Folder, folder
     end

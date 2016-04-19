@@ -1,4 +1,5 @@
 require "net/http"
+require "json"
 
 module Kloudless
   # Net::HTTP wrapper
@@ -8,60 +9,50 @@ module Kloudless
       @headers ||= {}
     end
 
-    def self.get(path, params: {}, headers: {})
+    def self.request(method, path, params: {}, data: {}, headers: {},
+                     parse_request: true, parse_response: true)
       uri = URI.parse(Kloudless::API_URL + path)
       uri.query = URI.encode_www_form(params) if !params.empty?
 
-      request = Net::HTTP::Get.new(uri)
+      if ['post', 'put', 'patch'].member?(method)
+        headers["Content-Type"] ||= "application/json"
+      end
+
+      request = Net::HTTP.const_get(method.capitalize).new(uri)
       request.initialize_http_header(headers)
 
-      execute(request)
+      if !data.empty?
+        data = data.to_json if parse_request
+        request.body = data
+      end
+
+      execute(request, parse_response: parse_response)
     end
 
-    # TODO: decouple Kloudless::HTTP methods from #execute. Have methods return
-    # request object, defaults to json parsing, but allow the option for raw
-    def self.get_raw(path)
-      uri = URI.parse(Kloudless::API_URL + path)
-      request = Net::HTTP::Get.new(uri)
-      request.initialize_http_header(headers)
-
-      execute(request, parse_json: false)
+    def self.get(path, **kwargs)
+      self.request('get', path, **kwargs)
     end
 
-
-    def self.post(path, params: {}, headers: {})
-      uri = URI.parse(Kloudless::API_URL + path)
-      headers["Content-Type"] = "application/json"
-
-      request = Net::HTTP::Post.new(uri)
-      request.initialize_http_header(headers)
-      request.body = params.to_json if !params.empty?
-
-      execute(request)
+    def self.post(path, params: {}, data: {}, headers: {}, **kwargs)
+      self.request('post', path, params: params, data: data,
+                   headers: headers, **kwargs)
     end
 
-    def self.patch(path, params: {}, headers: {})
-      uri = URI.parse(Kloudless::API_URL + path)
-      headers["Content-Type"] = "application/json"
-
-      request = Net::HTTP::Post.new(uri)
-      request.initialize_http_header(headers)
-      request.set_form_data(params) if !params.empty?
-
-      execute(request)
+    def self.put(path, params: {}, data: {}, headers: {}, **kwargs)
+      self.request('put', path, params: params, data: data,
+                   headers: headers, **kwargs)
     end
 
-    def self.delete(path, params: {}, headers: {})
-      uri = URI.parse(Kloudless::API_URL + path)
-      uri.query = URI.encode_www_form(params) if !params.empty?
-
-      request = Net::HTTP::Delete.new(uri)
-      request.initialize_http_header(headers)
-
-      execute(request)
+    def self.patch(path, params: {}, data: {}, headers: {}, **kwargs)
+      self.request('patch', path, params: params, data: data,
+                   headers: headers, **kwargs)
     end
 
-    def self.execute(request, parse_json: true)
+    def self.delete(path, params: {}, headers: {}, **kwargs)
+      self.request('delete', path, params: params, headers: headers, **kwargs)
+    end
+
+    def self.execute(request, parse_response: true)
       uri = request.uri
       @last_request = request
       headers.each {|k,v| request[k] = v}
@@ -70,12 +61,12 @@ module Kloudless
         http.request(request)
       }
 
-      if parse_json
+      if parse_response
         json = JSON.parse(response.body)
         raise Kloudless::Error.from_json(json) if json["error_code"]
         json
       else
-        response
+        response.body
       end
     end
 

@@ -15,11 +15,11 @@ class KloudlessTest < Minitest::Test
     end
   end
 
-  def test_authorize_account_key
-    Kloudless.authorize(account_key: "ACCOUNT_KEY")
+  def test_authorize_bearer_token
+    Kloudless.authorize(token: "BEARER_TOKEN")
     Kloudless.http.mock_response(Struct.new(:body).new('{}')) do
       Kloudless::Account.list
-      assert_equal "AccountKey ACCOUNT_KEY", Kloudless::HTTP.last_request["Authorization"]
+      assert_equal "Bearer BEARER_TOKEN", Kloudless::HTTP.last_request["Authorization"]
     end
   end
 end

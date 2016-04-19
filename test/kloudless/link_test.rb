@@ -11,7 +11,7 @@ class Kloudless::LinkTest < Minitest::Test
   end
 
   def test_create_link
-    Kloudless.http.expect(:post, args: ["/accounts/1/links", params: {file_id: "file-id"}]) do
+    Kloudless.http.expect(:post, args: ["/accounts/1/links", params: {}, data: {file_id: "file-id"}]) do
       link = Kloudless::Link.create(account_id: 1, file_id: "file-id")
       assert_kind_of Kloudless::Link, link
     end
@@ -25,14 +25,14 @@ class Kloudless::LinkTest < Minitest::Test
   end
 
   def test_update_link
-    Kloudless.http.expect(:patch, args: ["/accounts/1/links/2", params: {password: "foo"}]) do
+    Kloudless.http.expect(:patch, args: ["/accounts/1/links/2", params: {}, data: {password: "foo"}]) do
       link = Kloudless::Link.update(account_id: 1, link_id: 2, password: "foo")
       assert_kind_of Kloudless::Link, link
     end
   end
 
   def test_delete_link
-    Kloudless.http.expect(:delete, args: ["/accounts/1/links/2"]) do
+    Kloudless.http.expect(:delete, args: ["/accounts/1/links/2", params: {}]) do
       link = Kloudless::Link.delete(account_id: 1, link_id: 2)
       assert_kind_of Kloudless::Link, link
     end

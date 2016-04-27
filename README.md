@@ -23,8 +23,11 @@ official reference. You can obtain an API Key at the [Developer
 Portal](https://developers.kloudless.com/).
 
 ```ruby
-# Authentication
-Kloudless.authorize(api_key: "abc")
+# Authentication using a Bearer Token obtained by authenticating a user.
+Kloudless.authorize(token: "abc")
+
+# Alternatively, use the line below for API Keys:
+# Kloudless.authorize(api_key: "abc")
 
 accounts = Kloudless::Account.list
 account = accounts.first

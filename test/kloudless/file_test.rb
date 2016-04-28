@@ -76,4 +76,13 @@ class Kloudless::FileTest < Minitest::Test
       assert_kind_of Kloudless::File, files.first
     end
   end
+
+  def test_convert_id
+    response = {"id" => "foo"}
+    data = {raw_id: "bar", type: "file"}
+    Kloudless.http.expect(:post, returns: response, args:["/accounts/1/convert_id", params: {}, data: data ]) do
+      new_id_data = Kloudless::File.convert_id(account_id: 1, raw_id: data[:raw_id], type: data[:type])
+      assert_equal "foo", new_id_data["id"]
+    end
+  end
 end

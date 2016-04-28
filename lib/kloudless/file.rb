@@ -62,5 +62,12 @@ module Kloudless
       path = "/accounts/#{account_ids.join(',')}/search"
       Kloudless::Collection.new(self, http.get(path, params: params))
     end
+
+    def self.convert_id(account_id:, raw_id:, type:, params: {}, **data)
+      path = "/accounts/#{account_id}/convert_id"
+      data[:raw_id] = raw_id
+      data[:type] = type
+      http.post(path, params: params, data: data)
+    end
   end
 end

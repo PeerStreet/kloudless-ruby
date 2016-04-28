@@ -1,4 +1,6 @@
-# upcoming
+# 0.2.1
+
+- Convert ID endpoint for file/folders. Listed under files. @kuinak
 
 # 0.2.0
 

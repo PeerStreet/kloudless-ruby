@@ -26,12 +26,6 @@ module Kloudless
       http.post("/accounts", params: params, data: data)
     end
 
-    def self.convert_id(account_id:, raw_id:, type:, **params)
-      params[:raw_id] = raw_id
-      params[:type] = type
-      http.post("/accounts/#{account_id}/convert_id", params: params)
-    end
-
     class << self
       alias_method :create, :import
     end

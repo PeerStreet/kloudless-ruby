@@ -13,7 +13,7 @@ class Kloudless::HTTPTest < Minitest::Test
     http.mock_response(Struct.new(:body).new('{"foo": "bar"}')) do
       json = http.get("/foo")
 
-      assert_equal URI.parse("https://api.kloudless.com/v0/foo"), last_request.uri
+      assert_equal URI.parse("https://api.kloudless.com/v1/foo"), last_request.uri
       assert_kind_of Net::HTTP::Get, last_request
 
       expected = {"foo" => "bar"}
@@ -25,7 +25,7 @@ class Kloudless::HTTPTest < Minitest::Test
     http.mock_response(Struct.new(:body).new('{}')) do
       json = http.delete("/foo/1")
 
-      assert_equal URI.parse("https://api.kloudless.com/v0/foo/1"), last_request.uri
+      assert_equal URI.parse("https://api.kloudless.com/v1/foo/1"), last_request.uri
       assert_kind_of Net::HTTP::Delete, last_request
     end
   end
@@ -33,7 +33,7 @@ class Kloudless::HTTPTest < Minitest::Test
   def test_params
     http.mock_response(Struct.new(:body).new('{"foo": "bar"}')) do
       http.get("/foo", params: {page: 2})
-      assert_equal URI.parse("https://api.kloudless.com/v0/foo?page=2"), last_request.uri
+      assert_equal URI.parse("https://api.kloudless.com/v1/foo?page=2"), last_request.uri
     end
   end
 

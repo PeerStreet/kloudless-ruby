@@ -19,6 +19,10 @@ module Kloudless
       @json["page"]
     end
 
+    def next_page
+      @json["next_page"]
+    end
+
     def objects
       @json["objects"]
     end

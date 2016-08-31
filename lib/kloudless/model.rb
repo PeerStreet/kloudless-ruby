@@ -1,5 +1,5 @@
 module Kloudless
-  # Public: Base class for different API resources. e.g. Account, Team, Files.
+  # Public: Base class for different API resources. e.g. Account, Files, Folders.
   class Model
     def self.http
       Kloudless.http

@@ -46,7 +46,7 @@ v major.minor.patch
 ```
 
 The major version tracks the version of the Kloudless API. For example, all
-versions that start with `v0.x.y` are compatible with Kloudless API `v0`.
+versions that start with `v1.x.y` are compatible with Kloudless API `v1`.
 
 ## Release
 

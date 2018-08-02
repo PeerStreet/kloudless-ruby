@@ -26,6 +26,10 @@ module Kloudless
       http.post("/accounts", params: params, data: data)
     end
 
+    def self.encode_raw_id(account_id:, params: {}, **data)
+      http.post("/accounts/#{account_id}/encode_raw_id", params: params, data: data)
+    end
+
     class << self
       alias_method :create, :import
     end
